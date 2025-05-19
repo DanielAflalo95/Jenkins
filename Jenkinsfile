@@ -8,26 +8,33 @@ pipeline {
     APP_NAME = 'DanielJenkins'
     NAMESPACE = 'default'
   }
+  
   stages {
+    
     stage('Build') {
       steps {
         docker build -t '$DOCKER_HUB_REPO:$DOCKER_HUB_TAG' .
       }
     }
+    
     stage('Login') {
       steps {
         echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
       }
     }
+    
     stage('Push') {
       steps {
         docker push 'DOCKER_HUB_REPO:$DOCKER_HUB_TAG'
       }
     }
+    
   }
+  
   post {
     always {
       docker logout
     }
   }
+  
 }
