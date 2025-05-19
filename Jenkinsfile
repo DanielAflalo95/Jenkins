@@ -10,8 +10,6 @@ spec:
   volumes:
     - name: dind-storage
       emptyDir: {}
-    - name: docker-sock
-      emptyDir: {}
 
   containers:
     - name: dind
@@ -19,23 +17,28 @@ spec:
       securityContext:
         privileged: true
       env:
-        # מבטל TLS כדי שה־socket יוּצָא ללא סיסמה
+        # disable TLS so dockerd will listen on plain TCP + socket
         - name: DOCKER_TLS_CERTDIR
           value: ""
+      args:
+        # have the daemon listen on 0.0.0.0:2375
+        - --host=tcp://0.0.0.0:2375
       volumeMounts:
         - name: dind-storage
           mountPath: /var/lib/docker
-        - name: docker-sock
-          mountPath: /var/run/docker.sock
 
     - name: docker-cli
       image: docker:24.0-cli
       command:
         - cat
       tty: true
+      env:
+        # point the CLI at our DinD side-car
+        - name: DOCKER_HOST
+          value: tcp://localhost:2375
       volumeMounts:
-        - name: docker-sock
-          mountPath: /var/run/docker.sock
+        - name: dind-storage
+          mountPath: /var/lib/docker
 """
     }
   }
@@ -52,14 +55,17 @@ spec:
         sh "docker build -t ${DOCKER_HUB_REPO}:${DOCKER_HUB_TAG} ."
       }
     }
-    stage('Push') {
+    stage('Login') {
       steps {
         sh """
           echo ${DOCKERHUB_CREDENTIALS_PSW} \
-          | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
+            | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
         """
-        sh "docker push ${DOCKER_HUB_REPO}:${DOCKER_HUB_TAG}"
       }
     }
+    stage('Push) {
+      steps {
+        sh "docker push ${DOCKER_HUB_REPO}:${DOCKER_HUB_TAG}"
+      }
   }
 }
