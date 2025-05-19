@@ -17,11 +17,9 @@ spec:
       securityContext:
         privileged: true
       env:
-        # disable TLS so dockerd will listen on plain TCP + socket
         - name: DOCKER_TLS_CERTDIR
           value: ""
       args:
-        # have the daemon listen on 0.0.0.0:2375
         - --host=tcp://0.0.0.0:2375
       volumeMounts:
         - name: dind-storage
@@ -33,7 +31,6 @@ spec:
         - cat
       tty: true
       env:
-        # point the CLI at our DinD side-car
         - name: DOCKER_HOST
           value: tcp://localhost:2375
       volumeMounts:
