@@ -4,7 +4,7 @@ pipeline {
   environment {
     DOCKERHUB_CREDENTIALS = credentials('Docker')
     DOCKER_HUB_REPO = 'danielaflalo/flask'  // Based on your log, this is the repo you're using
-    DOCKER_HUB_TAG = latest
+    DOCKER_HUB_TAG = 'latest'
     APP_NAME = 'DanielJenkins'
     NAMESPACE = 'default'
   }
