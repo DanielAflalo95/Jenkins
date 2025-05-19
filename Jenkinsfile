@@ -33,7 +33,7 @@ spec:
   }
 
   environment {
-    DOCKERHUB_CREDENTIALS = credentials('my-dockerhub-id')
+    DOCKERHUB_CREDENTIALS = credentials('Dockerhub')
     DOCKER_HUB_REPO      = 'danielaflalo/flask'
     DOCKER_HUB_TAG       = 'latest'
   }
