@@ -11,7 +11,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        docker build -t $DOCKER_HUB_REPO:$DOCKER_HUB_TAG .
+        docker build -t '$DOCKER_HUB_REPO:$DOCKER_HUB_TAG' .
       }
     }
     stage('Login') {
@@ -21,7 +21,7 @@ pipeline {
     }
     stage('Push') {
       steps {
-        docker push $DOCKER_HUB_REPO:$DOCKER_HUB_TAG
+        docker push 'DOCKER_HUB_REPO:$DOCKER_HUB_TAG'
       }
     }
   }
