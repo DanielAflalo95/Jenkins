@@ -1,5 +1,13 @@
 pipeline {
-    agent any 
+    agent any
+
+    environment {
+         // Define environment variables
+         DOCKER_HUB_REPO = 'danielaflalo/jenkins'  // Based on your log, this is the repo you're using
+         APP_NAME = 'DanielJenkins'
+         NAMESPACE = 'default'
+     }
+    
     stages {
         stage('Stage 1') {
             steps {
