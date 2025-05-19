@@ -17,21 +17,21 @@ pipeline {
       }
     }
     
-    stage('Login') {
-      steps {
-        // login using the credentials binding
-        sh """
-          echo ${DOCKERHUB_CREDENTIALS_PSW} \
-          | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
-        """
-      }
-    }
+    // stage('Login') {
+    //   steps {
+    //     // login using the credentials binding
+    //     sh """
+    //       echo ${DOCKERHUB_CREDENTIALS_PSW} \
+    //       | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
+    //     """
+    //   }
+    // }
     
-    stage('Push') {
-      steps {
-        // push the image
-        sh "docker push ${DOCKER_HUB_REPO}:${DOCKER_HUB_TAG}"
-      }
-    }
+    // stage('Push') {
+    //   steps {
+    //     // push the image
+    //     sh "docker push ${DOCKER_HUB_REPO}:${DOCKER_HUB_TAG}"
+    //   }
+    // }
   }
 }
