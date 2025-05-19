@@ -7,14 +7,26 @@ pipeline {
 apiVersion: v1
 kind: Pod
 spec:
+  volumes:
+    - name: dind-storage
+      emptyDir: {}
+    - name: docker-sock
+      emptyDir: {}
+
   containers:
     - name: dind
       image: docker:24.0-dind
       securityContext:
         privileged: true
+      env:
+        # מבטל TLS כדי שה־socket יוּצָא ללא סיסמה
+        - name: DOCKER_TLS_CERTDIR
+          value: ""
       volumeMounts:
         - name: dind-storage
           mountPath: /var/lib/docker
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
 
     - name: docker-cli
       image: docker:24.0-cli
@@ -22,12 +34,8 @@ spec:
         - cat
       tty: true
       volumeMounts:
-        - name: dind-storage
+        - name: docker-sock
           mountPath: /var/run/docker.sock
-
-  volumes:
-    - name: dind-storage
-      emptyDir: {}
 """
     }
   }
