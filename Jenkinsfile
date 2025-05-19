@@ -50,22 +50,30 @@ spec:
   }
 
   stages {
+    stage('Wait for Docker') {
+      steps {
+        // wait until the DinD daemon is up and answering
+        sh '''
+          until docker version &> /dev/null; do
+            echo "Waiting for Docker daemon…"
+            sleep 1
+          done
+        '''
+      }
+    }
     stage('Build') {
       steps {
         sh "docker build -t ${DOCKER_HUB_REPO}:${DOCKER_HUB_TAG} ."
       }
     }
-    stage('Login') {
+    stage('Push') {
       steps {
         sh """
           echo ${DOCKERHUB_CREDENTIALS_PSW} \
             | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
         """
-      }
-    }
-    stage('Push) {
-      steps {
         sh "docker push ${DOCKER_HUB_REPO}:${DOCKER_HUB_TAG}"
       }
+    }
   }
 }
