@@ -13,7 +13,7 @@ pipeline {
     stage('Build') {
       steps {
         // build the image
-        sh docker build -t danielaflalo/flask:latest .
+        sh 'docker build -t danielaflalo/flask:latest .'
       }
     }
     
