@@ -17,8 +17,11 @@ spec:
       securityContext:
         privileged: true
       env:
+      # Read about this
         - name: DOCKER_TLS_CERTDIR
           value: ""
+
+      # Read about this
       args:
         - --host=tcp://0.0.0.0:2375
       volumeMounts:
@@ -31,6 +34,7 @@ spec:
         - cat
       tty: true
       env:
+        # Read about this
         - name: DOCKER_HOST
           value: tcp://localhost:2375
       volumeMounts:
